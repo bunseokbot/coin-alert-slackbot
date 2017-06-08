@@ -33,7 +33,7 @@ def hello():
     return 'hello?'
 
 
-@app.route("/coin")
+@app.route("/coin", methods=["POST"])
 def coin():
     if request.form.get('token') == config['token']:
         coinmsg = get_coininfo()
