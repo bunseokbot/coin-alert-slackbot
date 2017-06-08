@@ -1,0 +1,6 @@
+token: "<Your team token>"
+currencys:
+  - BTC
+  - ETH
+  - ETC
+  - XRP
