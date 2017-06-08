@@ -1,4 +1,6 @@
-from flask import Flask, request, json, abort
+from flask import Flask, request, Response, abort
+
+import json
 import requests
 import yaml
 
@@ -46,8 +48,8 @@ def coin():
             ]
         }
 
-        return app.response_class(
-            response=json.dumps(response),
+        return Response(
+            json.dumps(response),
             status=200,
             mimetype="application/json"
         )
