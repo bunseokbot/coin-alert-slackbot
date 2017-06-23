@@ -7,10 +7,27 @@ import yaml
 app = Flask(__name__)
 
 APIS = {
-    "coinone": "https://api.coinone.co.kr/ticker?currency=all"
+    "coinone": "https://api.coinone.co.kr/ticker?currency=all",
+    "korim": "http://coin.kor.im/json/coin_data.json"
 }
 
 config = yaml.load(open('config.yml').read())
+
+
+def get_kimchiinfo():
+    msg = ""
+
+    try:
+        data = requests.get(APIS['korim']).json()
+
+        msg += "BTC: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_btc_p']), data['polo_btc'], data['coinone_btc'])
+        msg += "ETH: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_eth_p']), data['polo_eth'], data['coinone_eth'])
+        msg += "ETC: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_etc_p']), data['polo_etc'], data['coinone_etc'])
+        msg += "XRP: {} % ({} KRW, {} KRW)".format(int(data['coinone_xrp_p']), data['polo_xrp'], data['coinone_xrp'])
+    except:
+        msg += "Error while loading premieum info"
+
+    return msg
 
 
 def get_coininfo():
@@ -32,6 +49,29 @@ def get_coininfo():
 def hello():
     return 'hello?'
 
+
+@app.route("/kimchi", methods=["POST"])
+def kimchi():
+    if request.form.get('token') == config['token']:
+        kimchimsg = get_kimchiinfo()
+
+        response = {
+            'response_type': 'in_channel',
+            'text': 'Poloniex vs Coinone Premieum status',
+            'attachments': [
+                {
+                    'text': kimchimsg
+                }
+            ]
+        }
+
+        return Response(
+            json.dumps(response),
+            status=200,
+            mimetype="application/json"
+        )
+    else:
+        abort(404)
 
 @app.route("/coin", methods=["POST"])
 def coin():
