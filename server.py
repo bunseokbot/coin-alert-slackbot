@@ -20,10 +20,10 @@ def get_kimchiinfo():
     try:
         data = requests.get(APIS['korim']).json()
 
-        msg += "BTC: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_btc_p']), data['polo_btc'], data['coinone_btc'])
-        msg += "ETH: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_eth_p']), data['polo_eth'], data['coinone_eth'])
-        msg += "ETC: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_etc_p']), data['polo_etc'], data['coinone_etc'])
-        msg += "XRP: {} % ({} KRW, {} KRW)".format(int(data['coinone_xrp_p']), data['polo_xrp'], data['coinone_xrp'])
+        msg += "BTC: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_btc_p']), int(data['polo_btc']), data['coinone_btc'])
+        msg += "ETH: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_eth_p']), int(data['polo_eth']), data['coinone_eth'])
+        msg += "ETC: {} % ({} KRW, {} KRW)\n".format(int(data['coinone_etc_p']), int(data['polo_etc']), data['coinone_etc'])
+        msg += "XRP: {} % ({} KRW, {} KRW)".format(int(data['coinone_xrp_p']), int(data['polo_xrp']), data['coinone_xrp'])
     except:
         msg += "Error while loading premieum info"
 
