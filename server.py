@@ -39,8 +39,9 @@ def get_coininfo():
         msg += "ETH : {} Won (Volume : {} ETH)\n".format(data['eth']['last'], data['eth']['volume'])
         msg += "ETC : {} Won (Volume : {} ETC)\n".format(data['etc']['last'], data['etc']['volume'])
         msg += "XRP : {} Won (Volume : {} XRP)".format(data['xrp']['last'], data['xrp']['volume'])
+
     except:
-        msg += "Error while loading currency info"
+        msg += "Error while loading coinone exchange info"
 
     return msg
 
