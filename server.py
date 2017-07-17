@@ -8,6 +8,13 @@ app = Flask(__name__)
 
 APIS = {
     "coinone": "https://api.coinone.co.kr/ticker?currency=all",
+    "korbit": {
+        "btc": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=btc_krw",
+        "eth": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=eth_krw",
+        "etc": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=etc_krw",
+        "xrp": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=xrp_krw"
+    },
+    "bithumb": "https://api.bithumb.com/public/ticker/all",
     "korim": "http://coin.kor.im/json/coin_data.json"
 }
 
@@ -30,7 +37,7 @@ def get_kimchiinfo():
     return msg
 
 
-def get_coininfo():
+def get_coinoneinfo():
     msg = ""
 
     try:
@@ -42,6 +49,38 @@ def get_coininfo():
 
     except:
         msg += "Error while loading coinone exchange info"
+
+    return msg
+
+
+def get_korbitinfo():
+    msg = ""
+
+    try:
+        for coin in APIS['korbit'].keys():
+            data = requests.get(APIS['korbit'][coin]).json()
+            msg += "{} : {} Won (Volume : {} {}\n".format(coin.upper(), data['last'], data['volume'], coin.upper())
+        msg = msg[:-1]
+    except:
+        msg += "Error while loading korbit exchange info"
+
+    return msg
+
+
+def get_bithumbinfo():
+    msg = ""
+
+    try:
+        data = requests.get(APIS['bithumb']).json()['data']
+        msg += "BTC : {} Won (Volume : {} BTC)\n".format(data['BTC']['buy_price'], data['BTC']['units_traded'])
+        msg += "ETH : {} Won (Volume : {} ETH)\n".format(data['ETH']['buy_price'], data['ETH']['units_traded'])
+        msg += "ETC : {} Won (Volume : {} ETC)\n".format(data['ETC']['buy_price'], data['ETC']['units_traded'])
+        msg += "XRP : {} Won (Volume : {} XRP)\n".format(data['XRP']['buy_price'], data['XRP']['units_traded'])
+        msg += "LTC : {} Won (Volume : {} LTC)\n".format(data['LTC']['buy_price'], data['LTC']['units_traded'])
+        msg += "DASH : {} Won (Volume : {} DASH)\n".format(data['DASH']['buy_price'], data['DASH']['units_traded'])
+
+    except:
+        msg += "Error while loading bithumb exchange info"
 
     return msg
 
@@ -74,14 +113,62 @@ def kimchi():
     else:
         abort(404)
 
-@app.route("/coin", methods=["POST"])
-def coin():
+@app.route("/coinone", methods=["POST"])
+def coinone():
     if request.form.get('token') == config['token']:
-        coinmsg = get_coininfo()
+        coinmsg = get_coinoneinfo()
 
         response = {
             'response_type': 'in_channel',
             'text': 'Current coinone market status',
+            'attachments': [
+                {
+                    'text': coinmsg
+                }
+            ]
+        }
+
+        return Response(
+            json.dumps(response),
+            status=200,
+            mimetype="application/json"
+        )
+    else:
+        abort(404)
+
+
+@app.route("/korbit", methods=["POST"])
+def korbit():
+    if request.form.get('token') == config['token']:
+        coinmsg = get_korbitinfo()
+
+        response = {
+            'response_type': 'in_channel',
+            'text': 'Current korbit market status',
+            'attachments': [
+                {
+                    'text': coinmsg
+                }
+            ]
+        }
+
+        return Response(
+            json.dumps(response),
+            status=200,
+            mimetype="application/json"
+        )
+    else:
+        abort(404)
+
+
+@app.route("/bithumb", methods=["POST"])
+def bithumb():
+    if request.form.get('token') == config['token']:
+        coinmsg = get_bithumbinfo()
+
+        response = {
+            'response_type': 'in_channel',
+            'text': 'Current bithumb market status',
             'attachments': [
                 {
                     'text': coinmsg
