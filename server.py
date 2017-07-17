@@ -59,7 +59,7 @@ def get_korbitinfo():
     try:
         for coin in APIS['korbit'].keys():
             data = requests.get(APIS['korbit'][coin]).json()
-            msg += "{} : {} Won (Volume : {} {}\n".format(coin.upper(), data['last'], data['volume'], coin.upper())
+            msg += "{} : {} Won (Volume : {} {})\n".format(coin.upper(), data['last'], data['volume'], coin.upper())
         msg = msg[:-1]
     except:
         msg += "Error while loading korbit exchange info"
