@@ -12,7 +12,8 @@ APIS = {
         "btc": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=btc_krw",
         "eth": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=eth_krw",
         "etc": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=etc_krw",
-        "xrp": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=xrp_krw"
+        "xrp": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=xrp_krw",
+        "bch": "https://api.korbit.co.kr/v1/ticker/detailed?currency_pair=bch_krw"
     },
     "bithumb": "https://api.bithumb.com/public/ticker/all",
     "korim": "http://coin.kor.im/json/coin_data.json"
@@ -43,6 +44,7 @@ def get_coinoneinfo():
     try:
         data = requests.get(APIS['coinone']).json()
         msg += "BTC : {} Won (Volume : {} BTC)\n".format(data['btc']['last'], data['btc']['volume'])
+        msg += "BCH : {} Won (Volume : {} BCH)".format(data['bch']['last'], data['bch']['volume'])
         msg += "ETH : {} Won (Volume : {} ETH)\n".format(data['eth']['last'], data['eth']['volume'])
         msg += "ETC : {} Won (Volume : {} ETC)\n".format(data['etc']['last'], data['etc']['volume'])
         msg += "XRP : {} Won (Volume : {} XRP)".format(data['xrp']['last'], data['xrp']['volume'])
@@ -73,6 +75,7 @@ def get_bithumbinfo():
     try:
         data = requests.get(APIS['bithumb']).json()['data']
         msg += "BTC : {} Won (Volume : {} BTC)\n".format(data['BTC']['buy_price'], data['BTC']['units_traded'])
+        msg += "BCH : {} Won (Volume : {} BCH)\n".format(data['BCH']['buy_price'], data['BCH']['units_traded'])
         msg += "ETH : {} Won (Volume : {} ETH)\n".format(data['ETH']['buy_price'], data['ETH']['units_traded'])
         msg += "ETC : {} Won (Volume : {} ETC)\n".format(data['ETC']['buy_price'], data['ETC']['units_traded'])
         msg += "XRP : {} Won (Volume : {} XRP)\n".format(data['XRP']['buy_price'], data['XRP']['units_traded'])
